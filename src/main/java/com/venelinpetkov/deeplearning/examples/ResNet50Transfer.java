@@ -24,17 +24,16 @@ package com.venelinpetkov.deeplearning.examples;
 //import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 //import org.nd4j.linalg.learning.config.Nesterovs;
 //import org.nd4j.linalg.lossfunctions.LossFunctions;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 ////
 //import java.io.File;
-//import java.io.IOException;
+import java.io.IOException;
 //import java.util.Random;
 
 public class ResNet50Transfer {
-
-//    // Logging config
-//    private static Logger log = LoggerFactory.getLogger(Vgg16Transfer.class);
+    // Logging config
+    private static Logger log = LoggerFactory.getLogger(ResNet50Transfer.class);
 //    private static final long rseed = 42;
 //    private static final Random rng = new Random(rseed);
 //    private static final int imageHeight = 224;
@@ -124,8 +123,8 @@ public class ResNet50Transfer {
 //     * @param args
 //     * @throws IOException
 //     */
-//    public static void main(String[] args) throws IOException {
-//        log.info("----- Vgg16 Transfer Learning Example -----");
+    public static void main(String[] args) throws IOException {
+        log.info("----- ResNet50 Transfer Learning Dogs and Cats Example -----");
 //
 //        TrainingArguments arguments = CommandLine.parseCliArguments(args);
 //        batchSize = arguments.batchSize;
@@ -147,6 +146,6 @@ public class ResNet50Transfer {
 //        }
 //        // Serialize the model params to disk
 //        ModelSerializer.writeModel(transferModel, modelParameterFilename, true);
-//    }
+    }
 
 }
