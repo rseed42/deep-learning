@@ -21,7 +21,7 @@ import java.io.IOException;
 public class ResNet50TransferNetFactory {
 
     // Logging config
-    private static Logger log = LoggerFactory.getLogger(ResNet50Transfer.class);
+    private static Logger log = LoggerFactory.getLogger(ResNet50TransferNetFactory.class);
     private static final String[] allowedExtensions = BaseImageLoader.ALLOWED_FORMATS;
     private static int labelIndex = 1;
 

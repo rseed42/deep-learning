@@ -26,7 +26,7 @@ public class ResNet50TransferLearn {
         final Random rng = new Random(cliArgs.randomSeed);
 
         // Prepare to load the data
-        DataSetIterator trainingData = DataLoaders.loadData(
+        DataSetIterator trainingData = DataLoaders.loadDataFull(
                 cliArgs.trainDir,
                 cliArgs.imageWidth,
                 cliArgs.imageHeight,

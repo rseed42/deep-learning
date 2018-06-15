@@ -26,7 +26,7 @@ public class DataLoaders {
      * @return
      * @throws IOException
      */
-    public static DataSetIterator loadData(
+    public static DataSetIterator loadDataSplit(
             String dataParentDir,
             int imageWidth,
             int imageHeight,
@@ -61,6 +61,45 @@ public class DataLoaders {
         // Initialize the record reader
         recordReader.initialize(trainData, transform);
         // Finally, we can create the data set
+        return new RecordReaderDataSetIterator(recordReader, batchSize, labelIndex, recordReader.numLabels());
+    }
+
+    /**
+     *
+     * @param dataParentDir
+     * @param imageWidth
+     * @param imageHeight
+     * @param imageChannels
+     * @param batchSize
+     * @param labelIndex
+     * @return
+     * @throws IOException
+     */
+    public static DataSetIterator loadDataFull(
+            String dataParentDir,
+            int imageWidth,
+            int imageHeight,
+            int imageChannels,
+            int batchSize,
+            int labelIndex,
+            final String[] allowedExtensions,
+            Random rng
+    ) throws IOException {
+        // We do not have a separate train / test data set, so we can use
+        // a file split to do this automatically for us. All of the data is
+        // located in the parent directory:
+        File parentDir = new File(dataParentDir);
+        // Specify what files we are to use, we do not split the data set:
+        FileSplit fileSplit = new FileSplit(parentDir, allowedExtensions, rng);
+        // We use the name of each class subdirectory as the class name, so we have
+        // to use the corresponding label generator:
+        ParentPathLabelGenerator labelMaker = new ParentPathLabelGenerator();
+        // The ImageRecordReader will automatically scale the images to the given dimensions
+        ImageRecordReader recordReader = new ImageRecordReader(imageHeight, imageWidth, imageChannels, labelMaker);
+        // We can transform the images for data augmentation purposes
+        ImageTransform transform = new MultiImageTransform(rng);
+        // Initialize the record reader
+        recordReader.initialize(fileSplit, transform);
         return new RecordReaderDataSetIterator(recordReader, batchSize, labelIndex, recordReader.numLabels());
     }
 }
