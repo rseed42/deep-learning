@@ -1,5 +1,5 @@
 #!/bin/bash
-JAR_DIR=../build/libs
+JAR_DIR=./build/libs
 CLASS_NAME=com.venelinpetkov.deeplearning.examples.ResNet50TransferEvaluate
 
 # Run the command
