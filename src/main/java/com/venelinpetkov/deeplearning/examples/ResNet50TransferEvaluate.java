@@ -4,6 +4,7 @@ import org.datavec.image.loader.BaseImageLoader;
 import org.deeplearning4j.eval.Evaluation;
 import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
+import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
 import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.factory.Nd4j;
@@ -47,6 +48,9 @@ public class ResNet50TransferEvaluate {
         Nd4j.getRandom().setSeed(cliArgs.randomSeed);
         // MultiLayerNetwork model = ModelSerializer.restoreMultiLayerNetwork(cliArgs.parameterFilename);
         ComputationGraph model = ModelSerializer.restoreComputationGraph(cliArgs.parameterFilename);
+        //
+        // We would like to receive some info during training ...
+        model.setListeners(new ScoreIterationListener(cliArgs.scorePerIteration));
         // Evaluate
         Evaluation evaluation = new Evaluation(numClasses);
         model.doEvaluation(testingData, evaluation);
