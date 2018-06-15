@@ -26,5 +26,10 @@ public class Arguments {
     @Parameter(names = "-parameterFilename", description = "Name of the parameter file to store the learned weights")
     public String parameterFilename = "resnet50.zip";
 
+    @Parameter(names = "-randomSeed", description = "Random seed parameter")
+    public int randomSeed = 42;
+
+    @Parameter(names = "-showArchitecture", description = "Display the dl4j model summary, which shows all layers")
+    public boolean showArchitecture = false;
 }
 
