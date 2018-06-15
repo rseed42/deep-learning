@@ -1,10 +1,11 @@
 package com.venelinpetkov.deeplearning.examples;
 
 import org.datavec.image.loader.BaseImageLoader;
-import org.deeplearning4j.nn.graph.ComputationGraph;
-import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
+import org.deeplearning4j.eval.Evaluation;
+import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
+import org.nd4j.linalg.factory.Nd4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,7 @@ public class ResNet50TransferEvaluate {
         final Random rng = new Random(cliArgs.randomSeed);
 
         // Prepare to load the data
-        DataSetIterator trainingData = DataLoaders.loadDataFull(
+        DataSetIterator testingData = DataLoaders.loadDataFull(
                 cliArgs.trainDir,
                 cliArgs.imageWidth,
                 cliArgs.imageHeight,
@@ -36,28 +37,18 @@ public class ResNet50TransferEvaluate {
                 allowedExtensions,
                 rng
         );
-//
-//        log.info("Data Summary");
-//        int numClasses = trainingData.getLabels().size();
-//        log.info("Number of class labels: {}", numClasses);
-//        ComputationGraph transferModel = ResNet50TransferNetFactory.buildNetwork(numClasses, cliArgs.randomSeed);
-//
-//        if (cliArgs.showArchitecture)
-//            log.info(transferModel.summary());
-//
-//        // We would like to receive some info during training ...
-//        transferModel.setListeners(new ScoreIterationListener(cliArgs.scorePerIteration));
-//
-//        // The actual training loop
-//        for (int i = 0; i < cliArgs.numEpochs; i++) {
-//            log.info("*** Starting epoch {} ***", i);
-//            trainingData.reset();
-//            while (trainingData.hasNext())
-//                transferModel.fit(trainingData.next());
-//            log.info("*** Completed epoch {} ***", i);
-//        }
-//
-//        // Serialize the model params to disk
-//        ModelSerializer.writeModel(transferModel, cliArgs.parameterFilename, true);
+
+        log.info("Data Summary");
+        int numClasses = testingData.getLabels().size();
+        log.info("Number of class labels: {}", numClasses);
+
+        // Load the model from file
+        Nd4j.getRandom().setSeed(cliArgs.randomSeed);
+        MultiLayerNetwork model = ModelSerializer.restoreMultiLayerNetwork(cliArgs.parameterFilename);
+        // Evaluate (distributed)
+        Evaluation evaluation = new Evaluation(numClasses);
+        model.doEvaluation(testingData, evaluation);
+        log.info("*** Evaluation ***");
+        log.info(evaluation.stats());
     }
 }
