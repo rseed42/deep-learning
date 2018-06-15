@@ -2,6 +2,7 @@ package com.venelinpetkov.deeplearning.examples;
 
 import org.datavec.image.loader.BaseImageLoader;
 import org.deeplearning4j.eval.Evaluation;
+import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.deeplearning4j.nn.multilayer.MultiLayerNetwork;
 import org.deeplearning4j.util.ModelSerializer;
 import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
@@ -44,8 +45,9 @@ public class ResNet50TransferEvaluate {
 
         // Load the model from file
         Nd4j.getRandom().setSeed(cliArgs.randomSeed);
-        MultiLayerNetwork model = ModelSerializer.restoreMultiLayerNetwork(cliArgs.parameterFilename);
-        // Evaluate (distributed)
+        // MultiLayerNetwork model = ModelSerializer.restoreMultiLayerNetwork(cliArgs.parameterFilename);
+        ComputationGraph model = ModelSerializer.restoreComputationGraph(cliArgs.parameterFilename);
+        // Evaluate
         Evaluation evaluation = new Evaluation(numClasses);
         model.doEvaluation(testingData, evaluation);
         log.info("*** Evaluation ***");
