@@ -31,5 +31,8 @@ public class Arguments {
 
     @Parameter(names = "-showArchitecture", description = "Display the dl4j model summary, which shows all layers")
     public boolean showArchitecture = false;
+
+    @Parameter(names = "-scorePerIteration", description = "When to show the score (every N iterations). Default is 10.")
+    public int scorePerIteration = 10;
 }
 

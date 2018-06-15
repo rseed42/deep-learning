@@ -7,21 +7,19 @@ import org.deeplearning4j.nn.graph.ComputationGraph;
 import org.deeplearning4j.nn.transferlearning.FineTuneConfiguration;
 import org.deeplearning4j.nn.transferlearning.TransferLearning;
 import org.deeplearning4j.nn.weights.WeightInit;
-import org.deeplearning4j.optimize.listeners.ScoreIterationListener;
-import org.deeplearning4j.util.ModelSerializer;
 import org.deeplearning4j.zoo.PretrainedType;
 import org.deeplearning4j.zoo.ZooModel;
 import org.deeplearning4j.zoo.model.ResNet50;
 import org.nd4j.linalg.activations.Activation;
-import org.nd4j.linalg.dataset.api.iterator.DataSetIterator;
 import org.nd4j.linalg.learning.config.Nesterovs;
 import org.nd4j.linalg.lossfunctions.LossFunctions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.io.IOException;
-import java.util.Random;
 
-public class ResNet50Transfer {
+import java.io.IOException;
+
+public class ResNet50TransferNetFactory {
+
     // Logging config
     private static Logger log = LoggerFactory.getLogger(ResNet50Transfer.class);
     private static final String[] allowedExtensions = BaseImageLoader.ALLOWED_FORMATS;
@@ -33,7 +31,7 @@ public class ResNet50Transfer {
      * @return
      * @throws IOException
      */
-    private static ComputationGraph buildNetwork(int numClasses, int rseed) throws IOException {
+    public static ComputationGraph buildNetwork(int numClasses, int rseed) throws IOException {
         ZooModel zooModel = ResNet50.builder().build();
         ComputationGraph pretrainedNet = (ComputationGraph) zooModel.initPretrained(PretrainedType.IMAGENET);
         log.info(pretrainedNet.summary());
@@ -61,54 +59,5 @@ public class ResNet50Transfer {
                         , "flatten_1")
                 .setOutputs("predictions")
                 .build();
-    }
-
-    /**
-     *
-     * @param args
-     * @throws IOException
-     */
-    public static void main(String[] args) throws IOException {
-        log.info("ResNet50 Transfer Learning Dogs and Cats Example");
-
-        Arguments cliArgs = ArgumentParser.parseCliArguments(args);
-
-        // We need this for some other stuff actually ...
-        final Random rng = new Random(cliArgs.randomSeed);
-
-        // Prepare to load the data
-        DataSetIterator trainingData = DataLoaders.loadData(
-                cliArgs.trainDir,
-                cliArgs.imageWidth,
-                cliArgs.imageHeight,
-                cliArgs.imageChannels,
-                cliArgs.batchSize,
-                labelIndex,
-                allowedExtensions,
-                rng
-        );
-
-        log.info("Data Summary");
-        int numClasses = trainingData.getLabels().size();
-        log.info("Number of class labels: {}", numClasses);
-        ComputationGraph transferModel = buildNetwork(numClasses, cliArgs.randomSeed);
-
-        if (cliArgs.showArchitecture)
-            log.info(transferModel.summary());
-
-        // We would like to receive some info during training ...
-        transferModel.setListeners(new ScoreIterationListener(10));
-
-        // The actual training loop
-        for (int i = 0; i < cliArgs.numEpochs; i++) {
-            log.info("*** Starting epoch {} ***", i);
-            trainingData.reset();
-            while (trainingData.hasNext())
-                transferModel.fit(trainingData.next());
-            log.info("*** Completed epoch {} ***", i);
-        }
-
-        // Serialize the model params to disk
-        ModelSerializer.writeModel(transferModel, cliArgs.parameterFilename, true);
     }
 }
