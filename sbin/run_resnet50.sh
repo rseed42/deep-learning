@@ -7,5 +7,4 @@ java -cp $JAR_DIR/*.jar $CLASS_NAME \
      -batchSize 28 \
      -numEpochs 1 \
      -trainDir "/data/dogscats/train" \
-     -parameterFilename "resnet50.zip" \
-     -showArchitecture false
+     -parameterFilename "resnet50.zip"

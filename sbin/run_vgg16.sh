@@ -7,5 +7,4 @@ java -cp $JAR_DIR/*.jar $CLASS_NAME \
      -batchSize 64 \
      -numEpochs 1 \
      -trainDir "/data/dogscats/train" \
-     -parameterFilename "vgg16.zip" \
-     -showArchitecture false
+     -parameterFilename "vgg16.zip"
